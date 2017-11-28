@@ -34,7 +34,7 @@ public class MovieRequest {
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
-		List<Movie> movies = new ArrayList<>();
+		List<Movie> movies = new ArrayList<Movie>();
 		try {
 			session.getTransaction().begin();
 			String sql = "Select movie from " + Movie.class.getName() + " movie " + " order by movie.mVoteAverage desc";
@@ -67,7 +67,7 @@ public class MovieRequest {
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
-		List<Movie> movies = new ArrayList<>();
+		List<Movie> movies = new ArrayList<Movie>();
 		try {
 			session.getTransaction().begin();
 			String sql = "Select movie from " + Movie.class.getName() + " movie where movie.mReleaseDate >?"
