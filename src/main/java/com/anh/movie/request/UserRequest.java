@@ -1,4 +1,4 @@
-package com.anh.movie;
+package com.anh.movie.request;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @Path("/user")
-public class User {
+public class UserRequest {
 	@GET
 	@Produces("application/json")
 	public Response  getUser() throws JSONException{

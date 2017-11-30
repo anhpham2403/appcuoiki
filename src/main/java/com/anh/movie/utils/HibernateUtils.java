@@ -1,4 +1,4 @@
-package com.anh.movie;
+package com.anh.movie.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
