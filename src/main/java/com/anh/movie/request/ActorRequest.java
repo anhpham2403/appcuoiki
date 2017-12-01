@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.json.JSONObject;
 
 import com.anh.movie.entities.Actor;
 import com.anh.movie.entities.Character;
@@ -31,9 +30,9 @@ public class ActorRequest {
 	@Produces("application/json")
 	public Response getActors(@QueryParam("page") int page) {
 		if (page <= 0) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", "page must be greater than 0");
-			return Response.status(501).entity(jsonObject.toString()).build();
+			JsonObject JsonObject = new JsonObject();
+			JsonObject.addProperty("error", "page must be greater than 0");
+			return Response.status(501).entity(JsonObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -70,9 +69,9 @@ public class ActorRequest {
 	@Produces("application/json")
 	public Response getDetailActor(@PathParam("id") int id) {
 		if (id <= 0) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", "page id be greater than 0");
-			return Response.status(501).entity(jsonObject.toString()).build();
+			JsonObject JsonObject = new JsonObject();
+			JsonObject.addProperty("error", "page id be greater than 0");
+			return Response.status(501).entity(JsonObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -90,9 +89,9 @@ public class ActorRequest {
 			session.getTransaction().rollback();
 		}
 		if (actor == null) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", "The resource you requested could not be found");
-			return Response.status(501).entity(jsonObject.toString()).build();
+			JsonObject JsonObject = new JsonObject();
+			JsonObject.addProperty("error", "The resource you requested could not be found");
+			return Response.status(501).entity(JsonObject.toString()).build();
 		}
 		JsonObject object = new JsonObject();
 		object.addProperty("id", actor.getIdActor());
@@ -112,7 +111,7 @@ public class ActorRequest {
 			object2.addProperty("title", character.getMovie().getmTitle());
 			object2.addProperty("poster_path", character.getMovie().getmPosterPath());
 			object2.addProperty("release_date",
-					character.getMovie().getmReleaseDate() != null ? character.getMovie().getmReleaseDate().getTime()
+					character.getMovie().getmReleaseDate() != null ? character.getMovie().getmReleaseDate().toString()
 							: null);
 			array.add(object2);
 		}
