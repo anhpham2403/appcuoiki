@@ -6,16 +6,18 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.anh.movie.utils.HibernateUtils;
 import com.anh.movie.entities.Genre;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+
 
 @Path("genre")
 public class GenreRequest {
@@ -37,15 +39,15 @@ public class GenreRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		JSONArray array = new JSONArray();
 		for (Genre genre : genres) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", genre.getId());
-			object2.addProperty("name", genre.getName());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", genre.getId());
+			object2.put("name", genre.getName());
+			array.put(object2);
 		}
-		object.add("genres", array);
+		object.put("genres", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
 }
