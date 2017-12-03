@@ -37,8 +37,9 @@ public class Movie {
 	private String mPosterPath;
 	private String mStatus;
 	private Date mReleaseDate;
-	private float mVoteAverage;
+	private double mVoteAverage;
 	private int mVoteCount;
+	private double popularity; 
 	private Set<Genre> genres = new HashSet<Genre>();
 	private Set<Character> characters = new HashSet<>();
 
@@ -117,11 +118,11 @@ public class Movie {
 	}
 
 	@Column(name = "vote_average", nullable = false)
-	public float getmVoteAverage() {
+	public double getmVoteAverage() {
 		return mVoteAverage;
 	}
 
-	public void setmVoteAverage(float mVoteAverage) {
+	public void setmVoteAverage(double mVoteAverage) {
 		this.mVoteAverage = mVoteAverage;
 	}
 
@@ -132,12 +133,6 @@ public class Movie {
 
 	public void setmVoteCount(int mVoteCount) {
 		this.mVoteCount = mVoteCount;
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return new com.google.gson.Gson().toJson(this);
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -160,4 +155,14 @@ public class Movie {
 	public void setCharacters(Set<Character> characters) {
 		this.characters = characters;
 	}
+
+	@Column(name = "popularity", nullable = false)
+	public double getPopularity() {
+		return popularity;
+	}
+
+	public void setPopularity(double popularity) {
+		this.popularity = popularity;
+	}
+	
 }

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.anh.movie.entities.Actor;
@@ -21,8 +22,6 @@ import com.anh.movie.entities.Character;
 import com.anh.movie.entities.Movie;
 import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 @Path("/actor")
 public class ActorRequest {
@@ -31,9 +30,9 @@ public class ActorRequest {
 	@Produces("application/json")
 	public Response getActors(@QueryParam("page") int page) {
 		if (page <= 0) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", "page must be greater than 0");
-			return Response.status(501).entity(jsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -51,17 +50,17 @@ public class ActorRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Actor actor : actors) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", actor.getIdActor());
-			object2.addProperty("name", actor.getName());
-			object2.addProperty("profile_path", actor.getIdActor());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", actor.getIdActor());
+			object2.put("name", actor.getName());
+			object2.put("profile_path", actor.getIdActor());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
 
@@ -70,9 +69,9 @@ public class ActorRequest {
 	@Produces("application/json")
 	public Response getDetailActor(@PathParam("id") int id) {
 		if (id <= 0) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", "page id be greater than 0");
-			return Response.status(501).entity(jsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page id be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -90,33 +89,33 @@ public class ActorRequest {
 			session.getTransaction().rollback();
 		}
 		if (actor == null) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", "The resource you requested could not be found");
-			return Response.status(501).entity(jsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "The resource you requested could not be found");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("id", actor.getIdActor());
-		object.addProperty("imdb_id", actor.getIdImdb());
-		object.addProperty("name", actor.getName());
-		object.addProperty("also_known_as", actor.getAlsoKnownAs());
-		object.addProperty("gender", actor.getGender());
-		object.addProperty("birthday", actor.getBirthday() != null ? actor.getBirthday().getTime() : null);
-		object.addProperty("deathday", actor.getDeathday() != null ? actor.getDeathday().getTime() : null);
-		object.addProperty("biography", actor.getBiography());
-		object.addProperty("place_of_birth", actor.getPlaceOfBirth());
-		object.addProperty("profile_path", actor.getProfilePath());
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("id", actor.getIdActor());
+		object.put("imdb_id", actor.getIdImdb());
+		object.put("name", actor.getName());
+		object.put("also_known_as", actor.getAlsoKnownAs());
+		object.put("gender", actor.getGender());
+		object.put("birthday", actor.getBirthday() != null ? actor.getBirthday().getTime() : null);
+		object.put("deathday", actor.getDeathday() != null ? actor.getDeathday().getTime() : null);
+		object.put("biography", actor.getBiography());
+		object.put("place_of_birth", actor.getPlaceOfBirth());
+		object.put("profile_path", actor.getProfilePath());
+		JSONArray array = new JSONArray();
 		for (Character character : actor.getCharacters()) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", character.getMovie().getIdMovie());
-			object2.addProperty("title", character.getMovie().getmTitle());
-			object2.addProperty("poster_path", character.getMovie().getmPosterPath());
-			object2.addProperty("release_date",
-					character.getMovie().getmReleaseDate() != null ? character.getMovie().getmReleaseDate().getTime()
+			org.json.JSONObject object2 = new JSONObject();
+			object2.put("id", character.getMovie().getIdMovie());
+			object2.put("title", character.getMovie().getmTitle());
+			object2.put("poster_path", character.getMovie().getmPosterPath());
+			object2.put("release_date",
+					character.getMovie().getmReleaseDate() != null ? character.getMovie().getmReleaseDate().toString()
 							: null);
-			array.add(object2);
+			array.put(object2);
 		}
-		object.add("movies", array);
+		object.put("movies", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
 }
