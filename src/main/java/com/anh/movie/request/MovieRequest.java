@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,6 +27,7 @@ import com.anh.movie.entities.Genre;
 import com.anh.movie.entities.Movie;
 import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
+
 @Path("/movie")
 public class MovieRequest {
 	@GET
@@ -422,7 +424,7 @@ public class MovieRequest {
 			Object[] o = query2.getSingleResult();
 			for (Movie movie : movies) {
 				R0 = (double) o[0];
-				W = movie.getmVoteCount()  / Double.valueOf((long) o[1]);
+				W = movie.getmVoteCount() / Double.valueOf((long) o[1]);
 				double Ra = movie.getmVoteAverage() * W + (1 - W) * R0;
 				sql = "update Movie movie set movie.popularity = :popularity where movie.idMovie = :idMovie";
 				Query<?> query3 = session.createQuery(sql);
@@ -437,5 +439,26 @@ public class MovieRequest {
 			session.getTransaction().rollback();
 		}
 		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/image/{id}")
+	@Produces("application/json")
+	public Response getImageOfMovie(@PathParam("id") int id) {
+		SessionFactory factory = HibernateUtils.getSessionFactory();
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		List<String> imagePath = new ArrayList<>();
+		String sql = "Select image_path from image_movie where id_movie = ?";
+		@SuppressWarnings("unchecked")
+		Query<String> query = session.createSQLQuery(sql);
+		query.setParameter(0, id);
+		imagePath = query.getResultList();
+		JSONArray array = new JSONArray();
+		for (String i : imagePath) {
+			array.put(i);
+		}
+		session.close();
+		return Response.status(200).entity(array.toString()).build();
 	}
 }
