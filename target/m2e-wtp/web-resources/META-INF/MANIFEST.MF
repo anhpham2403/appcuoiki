@@ -1,5 +1,28 @@
 Manifest-Version: 1.0
 Built-By: anh
+Class-Path: jersey-container-grizzly2-http-2.22.1.jar javax.inject-2.4
+ .0-b31.jar grizzly-http-server-2.3.23.jar grizzly-http-2.3.23.jar gri
+ zzly-framework-2.3.23.jar javax.ws.rs-api-2.0.1.jar hibernate-core-5.
+ 2.2.Final.jar jboss-logging-3.3.0.Final.jar hibernate-jpa-2.1-api-1.0
+ .0.Final.jar javassist-3.20.0-GA.jar antlr-2.7.7.jar geronimo-jta_1.1
+ _spec-1.1.1.jar jandex-2.0.0.Final.jar classmate-1.3.0.jar dom4j-1.6.
+ 1.jar hibernate-commons-annotations-5.0.1.Final.jar cdi-api-1.1.jar e
+ l-api-2.2.jar jboss-interceptors-api_1.1_spec-1.0.0.Beta1.jar jsr250-
+ api-1.0.jar javax.inject-1.jar hibernate-java8-5.2.2.Final.jar mysql-
+ connector-java-5.1.34.jar jjwt-0.6.0.jar jackson-databind-2.4.2.jar j
+ ackson-core-2.4.2.jar commons-lang-2.6.jar json-20171018.jar commons-
+ collections-3.2.2.jar jersey-media-json-jackson-2.22.1.jar jersey-ent
+ ity-filtering-2.22.1.jar jackson-jaxrs-base-2.5.4.jar jackson-jaxrs-j
+ son-provider-2.5.4.jar jackson-module-jaxb-annotations-2.5.4.jar jack
+ son-annotations-2.5.4.jar asm-3.3.1.jar commons-codec-1.10.jar guava-
+ 18.0.jar jersey-server-2.22.1.jar jersey-client-2.22.1.jar jersey-med
+ ia-jaxb-2.22.1.jar javax.annotation-api-1.2.jar hk2-api-2.4.0-b31.jar
+  hk2-utils-2.4.0-b31.jar aopalliance-repackaged-2.4.0-b31.jar hk2-loc
+ ator-2.4.0-b31.jar validation-api-1.1.0.Final.jar jersey-common-2.22.
+ 1.jar jersey-guava-2.22.1.jar osgi-resource-locator-1.0.1.jar jersey-
+ container-servlet-core-2.22.1.jar jersey-container-servlet-2.22.1.jar
+  jaxrs-ri-2.22.1.jar jersey-bean-validation-2.22.1.jar hibernate-vali
+ dator-5.1.3.Final.jar javax.el-api-2.2.4.jar javax.el-2.2.4.jar
 Build-Jdk: 1.8.0_144
 Created-By: Maven Integration for Eclipse
 

@@ -135,12 +135,6 @@ public class Movie {
 		this.mVoteCount = mVoteCount;
 	}
 
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return new com.google.gson.Gson().toJson(this);
-	}
-
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "movie_genre", catalog = "movie", joinColumns = {
 			@JoinColumn(name = "id_movie", nullable = false, updatable = false) }, inverseJoinColumns = {

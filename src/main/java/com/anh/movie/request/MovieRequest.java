@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -15,15 +17,15 @@ import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.anh.movie.entities.Character;
 import com.anh.movie.entities.Actor;
 import com.anh.movie.entities.Genre;
 import com.anh.movie.entities.Movie;
 import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 @Path("/movie")
 public class MovieRequest {
 	@GET
@@ -31,9 +33,9 @@ public class MovieRequest {
 	@Produces("application/json")
 	public Response getTopRateMovie(@QueryParam("page") int page) {
 		if (page <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "page must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -51,18 +53,18 @@ public class MovieRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", movie.getIdMovie());
-			object2.addProperty("poster_path", movie.getmPosterPath());
-			object2.addProperty("title", movie.getmTitle());
-			object2.addProperty("release_date", movie.getmReleaseDate().toString());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", movie.getIdMovie());
+			object2.put("poster_path", movie.getmPosterPath());
+			object2.put("title", movie.getmTitle());
+			object2.put("release_date", movie.getmReleaseDate().toString());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
 
@@ -70,11 +72,11 @@ public class MovieRequest {
 	@GET
 	@Path("/upcoming")
 	@Produces("application/json")
-	public Response getUpcomingMovie(@QueryParam("page") int page)  {
+	public Response getUpcomingMovie(@QueryParam("page") int page) {
 		if (page <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "page must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -84,7 +86,7 @@ public class MovieRequest {
 			String sql = "Select movie from " + Movie.class.getName() + " movie where movie.mReleaseDate >?"
 					+ " order by movie.mReleaseDate desc";
 			Calendar timeNow = Calendar.getInstance();
-			timeNow.set(Calendar.DATE, timeNow.get(Calendar.DATE)+7);
+			timeNow.set(Calendar.DATE, timeNow.get(Calendar.DATE) + 7);
 			@SuppressWarnings("unchecked")
 			Query<Movie> query = session.createQuery(sql);
 			query.setParameter(0, timeNow.getTime());
@@ -96,43 +98,44 @@ public class MovieRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", movie.getIdMovie());
-			object2.addProperty("poster_path", movie.getmPosterPath());
-			object2.addProperty("title", movie.getmTitle());
-			object2.addProperty("release_date", movie.getmReleaseDate().toString());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", movie.getIdMovie());
+			object2.put("poster_path", movie.getmPosterPath());
+			object2.put("title", movie.getmTitle());
+			object2.put("release_date", movie.getmReleaseDate().toString());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
+
 	@SuppressWarnings("deprecation")
 	@GET
 	@Path("/now_playing")
 	@Produces("application/json")
-	public Response getNowPlayingMovie(@QueryParam("page") int page)  {
+	public Response getNowPlayingMovie(@QueryParam("page") int page) {
 		if (page <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "page must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
 		List<Movie> movies = new ArrayList<Movie>();
 		try {
 			session.getTransaction().begin();
-			String sql = "Select movie from " + Movie.class.getName() + " movie where movie.mReleaseDate between :date1 and :date2"
-					+ " order by movie.mReleaseDate desc";
+			String sql = "Select movie from " + Movie.class.getName()
+					+ " movie where movie.mReleaseDate between :date1 and :date2" + " order by movie.mReleaseDate desc";
 			@SuppressWarnings("unchecked")
 			Calendar timeNow = Calendar.getInstance();
 			Calendar time1 = Calendar.getInstance();
 			Calendar time2 = Calendar.getInstance();
-			time1.set(Calendar.DATE, timeNow.get(Calendar.DATE)-7);
-			time2.set(Calendar.DATE, timeNow.get(Calendar.DATE)+7);
+			time1.set(Calendar.DATE, timeNow.get(Calendar.DATE) - 7);
+			time2.set(Calendar.DATE, timeNow.get(Calendar.DATE) + 7);
 			Query<Movie> query = session.createQuery(sql);
 			query.setParameter("date1", time1.getTime());
 			query.setParameter("date2", time2.getTime());
@@ -144,29 +147,30 @@ public class MovieRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", movie.getIdMovie());
-			object2.addProperty("poster_path", movie.getmPosterPath());
-			object2.addProperty("title", movie.getmTitle());
-			object2.addProperty("release_date", movie.getmReleaseDate().toString());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", movie.getIdMovie());
+			object2.put("poster_path", movie.getmPosterPath());
+			object2.put("title", movie.getmTitle());
+			object2.put("release_date", movie.getmReleaseDate().toString());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
+
 	@SuppressWarnings("deprecation")
 	@GET
 	@Path("/popular")
 	@Produces("application/json")
-	public Response getPopularMovie(@QueryParam("page") int page)  {
+	public Response getPopularMovie(@QueryParam("page") int page) {
 		if (page <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "page must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -184,29 +188,30 @@ public class MovieRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", movie.getIdMovie());
-			object2.addProperty("poster_path", movie.getmPosterPath());
-			object2.addProperty("title", movie.getmTitle());
-			object2.addProperty("release_date", movie.getmReleaseDate().toString());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", movie.getIdMovie());
+			object2.put("poster_path", movie.getmPosterPath());
+			object2.put("title", movie.getmTitle());
+			object2.put("release_date", movie.getmReleaseDate().toString());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
+
 	@SuppressWarnings("deprecation")
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
 	public Response getDetailMovie(@PathParam("id") int id) {
 		if (id <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "id must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "id must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -218,9 +223,9 @@ public class MovieRequest {
 			Query<Movie> query = session.createQuery(sql);
 			query.setParameter(0, id);
 			if (query.uniqueResult() == null) {
-				JsonObject JsonObject = new JsonObject();
-				JsonObject.addProperty("error", "The resource you requested could not be found");
-				return Response.status(501).entity(JsonObject.toString()).build();
+				JSONObject JSONObject = new JSONObject();
+				JSONObject.put("error", "The resource you requested could not be found");
+				return Response.status(501).entity(JSONObject.toString()).build();
 			}
 			movie = query.getSingleResult();
 			session.getTransaction().commit();
@@ -229,40 +234,40 @@ public class MovieRequest {
 			session.getTransaction().rollback();
 		}
 		if (movie == null) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "The resource you requested could not be found");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "The resource you requested could not be found");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
-		JsonObject object2 = new JsonObject();
-		object2.addProperty("id", movie.getIdMovie());
-		object2.addProperty("imdb_id", movie.getmImdbId());
-		object2.addProperty("poster_path", movie.getmPosterPath());
-		object2.addProperty("title", movie.getmTitle());
-		object2.addProperty("original_title", movie.getmOriginalTitle());
-		object2.addProperty("overview", movie.getmOverView());
-		object2.addProperty("status", movie.getmStatus());
-		object2.addProperty("release_date", movie.getmReleaseDate().toString());
-		object2.addProperty("vote_average", movie.getmVoteAverage());
-		object2.addProperty("vote_count", movie.getmVoteCount());
-		JsonArray jsonArray = new JsonArray();
+		JSONObject object2 = new JSONObject();
+		object2.put("id", movie.getIdMovie());
+		object2.put("imdb_id", movie.getmImdbId());
+		object2.put("poster_path", movie.getmPosterPath());
+		object2.put("title", movie.getmTitle());
+		object2.put("original_title", movie.getmOriginalTitle());
+		object2.put("overview", movie.getmOverView());
+		object2.put("status", movie.getmStatus());
+		object2.put("release_date", movie.getmReleaseDate().toString());
+		object2.put("vote_average", movie.getmVoteAverage());
+		object2.put("vote_count", movie.getmVoteCount());
+		JSONArray JSONArray = new JSONArray();
 		for (Genre genre : movie.getGenres()) {
-			JsonObject genreJson = new JsonObject();
-			genreJson.addProperty("id", genre.getId());
-			genreJson.addProperty("name", genre.getName());
-			jsonArray.add(genreJson);
+			JSONObject genreJson = new JSONObject();
+			genreJson.put("id", genre.getId());
+			genreJson.put("name", genre.getName());
+			JSONArray.put(genreJson);
 		}
-		object2.add("genres", jsonArray);
-		JsonArray jsonArray2 = new JsonArray();
+		object2.put("genres", JSONArray);
+		JSONArray JSONArray2 = new JSONArray();
 		for (Character character : movie.getCharacters()) {
 			Actor actor = character.getActor();
-			JsonObject actorJson = new JsonObject();
-			actorJson.addProperty("id", actor.getIdActor());
-			actorJson.addProperty("name", actor.getName());
-			actorJson.addProperty("character", character.getCharacter());
-			actorJson.addProperty("profile_path", character.getProfilePath());
-			jsonArray2.add(actorJson);
+			JSONObject actorJson = new JSONObject();
+			actorJson.put("id", actor.getIdActor());
+			actorJson.put("name", actor.getName());
+			actorJson.put("character", character.getCharacter());
+			actorJson.put("profile_path", character.getProfilePath());
+			JSONArray2.put(actorJson);
 		}
-		object2.add("cast", jsonArray2);
+		object2.put("cast", JSONArray2);
 		return Response.status(200).entity(object2.toString()).build();
 	}
 
@@ -270,12 +275,11 @@ public class MovieRequest {
 	@GET
 	@Path("/by_genre_id")
 	@Produces("application/json")
-	public Response getMoviesByGenreId(@QueryParam("id") int idGenre, @QueryParam("page") int page)
-			 {
+	public Response getMoviesByGenreId(@QueryParam("id") int idGenre, @QueryParam("page") int page) {
 		if (page <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "page must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -295,18 +299,18 @@ public class MovieRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", movie.getIdMovie());
-			object2.addProperty("poster_path", movie.getmPosterPath());
-			object2.addProperty("title", movie.getmTitle());
-			object2.addProperty("release_date", movie.getmReleaseDate().toString());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", movie.getIdMovie());
+			object2.put("poster_path", movie.getmPosterPath());
+			object2.put("title", movie.getmTitle());
+			object2.put("release_date", movie.getmReleaseDate().toString());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
 
@@ -314,12 +318,11 @@ public class MovieRequest {
 	@GET
 	@Path("/search")
 	@Produces("application/json")
-	public Response getMoviesByName(@QueryParam("name") String name, @QueryParam("page") int page)
-			 {
+	public Response getMoviesByName(@QueryParam("name") String name, @QueryParam("page") int page) {
 		if (page <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "page must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -340,18 +343,18 @@ public class MovieRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", movie.getIdMovie());
-			object2.addProperty("poster_path", movie.getmPosterPath());
-			object2.addProperty("title", movie.getmTitle());
-			object2.addProperty("release_date", movie.getmReleaseDate().toString());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", movie.getIdMovie());
+			object2.put("poster_path", movie.getmPosterPath());
+			object2.put("title", movie.getmTitle());
+			object2.put("release_date", movie.getmReleaseDate().toString());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
 
@@ -359,12 +362,11 @@ public class MovieRequest {
 	@GET
 	@Path("/by_actor_id")
 	@Produces("application/json")
-	public Response getMoviesByActorId(@QueryParam("id") int idActor, @QueryParam("page") int page)
-			 {
+	public Response getMoviesByActorId(@QueryParam("id") int idActor, @QueryParam("page") int page) {
 		if (page <= 0) {
-			JsonObject JsonObject = new JsonObject();
-			JsonObject.addProperty("error", "page must be greater than 0");
-			return Response.status(501).entity(JsonObject.toString()).build();
+			JSONObject JSONObject = new JSONObject();
+			JSONObject.put("error", "page must be greater than 0");
+			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
@@ -384,18 +386,18 @@ public class MovieRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JsonObject object = new JsonObject();
-		object.addProperty("page", page);
-		JsonArray array = new JsonArray();
+		JSONObject object = new JSONObject();
+		object.put("page", page);
+		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
-			JsonObject object2 = new JsonObject();
-			object2.addProperty("id", movie.getIdMovie());
-			object2.addProperty("poster_path", movie.getmPosterPath());
-			object2.addProperty("title", movie.getmTitle());
-			object2.addProperty("release_date", movie.getmReleaseDate().toString());
-			array.add(object2);
+			JSONObject object2 = new JSONObject();
+			object2.put("id", movie.getIdMovie());
+			object2.put("poster_path", movie.getmPosterPath());
+			object2.put("title", movie.getmTitle());
+			object2.put("release_date", movie.getmReleaseDate().toString());
+			array.put(object2);
 		}
-		object.add("result", array);
+		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
 
@@ -414,13 +416,13 @@ public class MovieRequest {
 			@SuppressWarnings("unchecked")
 			Query<Movie> query = session.createQuery(sql);
 			movies = query.getResultList();
-			sql = "Select AVG(mVoteAverage),mVoteCount,SUM(mVoteCount) from " + Movie.class.getName() + " movie";
+			sql = "Select AVG(mVoteAverage),SUM(mVoteCount) from " + Movie.class.getName() + " movie";
 			@SuppressWarnings("unchecked")
 			Query<Object[]> query2 = session.createQuery(sql);
 			Object[] o = query2.getSingleResult();
-			R0 = (double) o[0];
-			W = (int) o[1] / Double.valueOf((long) o[2]);
 			for (Movie movie : movies) {
+				R0 = (double) o[0];
+				W = movie.getmVoteCount()  / Double.valueOf((long) o[1]);
 				double Ra = movie.getmVoteAverage() * W + (1 - W) * R0;
 				sql = "update Movie movie set movie.popularity = :popularity where movie.idMovie = :idMovie";
 				Query<?> query3 = session.createQuery(sql);
