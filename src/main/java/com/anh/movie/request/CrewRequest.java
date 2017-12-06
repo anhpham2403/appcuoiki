@@ -1,7 +1,6 @@
 package com.anh.movie.request;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -19,55 +18,54 @@ import org.json.JSONObject;
 
 import com.anh.movie.entities.Actor;
 import com.anh.movie.entities.Character;
+import com.anh.movie.entities.Crew;
 import com.anh.movie.entities.Movie;
 import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
 
-@Path("/actor")
-public class ActorRequest {
+@Path("/crew")
+public class CrewRequest {
 	@GET
-	@Path("/actors")
+	@Path("/by_movie_id")
 	@Produces("application/json")
-	public Response getActors(@QueryParam("page") int page) {
-		if (page <= 0) {
+	public Response getActors(@QueryParam("id") int id) {
+		if (id <= 0) {
 			JSONObject JSONObject = new JSONObject();
-			JSONObject.put("error", "page must be greater than 0");
+			JSONObject.put("error", "id must be greater than 0");
 			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
-		List<Actor> actors = new ArrayList<Actor>();
+		List<Crew> crews = new ArrayList<Crew>();
 		try {
 			session.getTransaction().begin();
-			String sql = "Select actor from " + Actor.class.getName() + " actor";
+			String sql = "Select crew from " + Crew.class.getName() + " crew JOIN crew.movies v  where v.idMovie = ?";
 			@SuppressWarnings("unchecked")
-			Query<Actor> query = session.createQuery(sql);
-			query.setFirstResult((page - 1) * Constant.ITEM_PER_PAGE);
-			query.setMaxResults(Constant.ITEM_PER_PAGE);
-			actors = query.getResultList();
+			Query<Crew> query = session.createQuery(sql);
+			query.setParameter(0, id);
+			crews = query.getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
 		JSONObject object = new JSONObject();
-		object.put("page", page);
 		JSONArray array = new JSONArray();
-		for (Actor actor : actors) {
+		for (Crew crew : crews) {
 			JSONObject object2 = new JSONObject();
-			object2.put("id", actor.getIdActor());
-			object2.put("name", actor.getName());
-			object2.put("profile_path", actor.getIdActor());
+			object2.put("id", crew.getIdCrew());
+			object2.put("name", crew.getName());
+			object2.put("job", crew.getJob());
+			object2.put("profile_path", crew.getProfilePath());
 			array.put(object2);
 		}
 		object.put("result", array);
 		return Response.status(200).entity(object.toString()).build();
 	}
-
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
-	public Response getDetailActor(@PathParam("id") int id) {
+	public Response getDetailCrew(@PathParam("id") int id) {
 		if (id <= 0) {
 			JSONObject JSONObject = new JSONObject();
 			JSONObject.put("error", "page id be greater than 0");
@@ -75,47 +73,35 @@ public class ActorRequest {
 		}
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
-		Actor actor = null;
+		Crew crew = null;
 		try {
 			session.getTransaction().begin();
-			String sql = "Select actor from " + Actor.class.getName() + " actor where actor.idActor = ?";
+			String sql = "Select crew from " + Crew.class.getName() + " crew where crew.idCrew = ?";
 			@SuppressWarnings("unchecked")
-			Query<Actor> query = session.createQuery(sql);
+			Query<Crew> query = session.createQuery(sql);
 			query.setParameter(0, id);
-			actor = query.getSingleResult();
+			crew = query.getSingleResult();
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		if (actor == null) {
+		if (crew == null) {
 			JSONObject JSONObject = new JSONObject();
 			JSONObject.put("error", "The resource you requested could not be found");
 			return Response.status(501).entity(JSONObject.toString()).build();
 		}
 		JSONObject object = new JSONObject();
-		object.put("id", actor.getIdActor());
-		object.put("imdb_id", actor.getIdImdb());
-		object.put("name", actor.getName());
-		object.put("also_known_as", actor.getAlsoKnownAs());
-		object.put("gender", actor.getGender());
-		object.put("birthday", actor.getBirthday() != null ? actor.getBirthday().toString() : null);
-		object.put("deathday", actor.getDeathday() != null ? actor.getDeathday().toString() : null);
-		object.put("biography", actor.getBiography());
-		object.put("place_of_birth", actor.getPlaceOfBirth());
-		object.put("profile_path", actor.getProfilePath());
-		JSONArray array = new JSONArray();
-		for (Character character : actor.getCharacters()) {
-			org.json.JSONObject object2 = new JSONObject();
-			object2.put("id", character.getMovie().getIdMovie());
-			object2.put("title", character.getMovie().getmTitle());
-			object2.put("poster_path", character.getMovie().getmPosterPath());
-			object2.put("release_date",
-					character.getMovie().getmReleaseDate() != null ? character.getMovie().getmReleaseDate().toString()
-							: null);
-			array.put(object2);
-		}
-		object.put("movies", array);
+		object.put("id", crew.getIdCrew());
+		object.put("job", crew.getJob());
+		object.put("name", crew.getName());
+		object.put("also_known_as", crew.getAlsoKnownAs());
+		object.put("gender", crew.getGender());
+		object.put("birthday", crew.getBirthday() != null ? crew.getBirthday().toString() : null);
+		object.put("deathday", crew.getDeathday() != null ? crew.getDeathday().toString() : null);
+		object.put("biography", crew.getBiography());
+		object.put("place_of_birth", crew.getPlaceOfBirth());
+		object.put("profile_path", crew.getProfilePath());
 		return Response.status(200).entity(object.toString()).build();
 	}
 }

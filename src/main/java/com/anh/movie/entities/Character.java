@@ -26,7 +26,7 @@ public class Character implements Serializable{
 	private Movie movie;
 	private String character;
 	private String profilePath;
-
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_actor", nullable = false)
 	public Actor getActor() {

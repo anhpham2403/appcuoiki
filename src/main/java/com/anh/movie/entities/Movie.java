@@ -42,7 +42,7 @@ public class Movie {
 	private double popularity; 
 	private Set<Genre> genres = new HashSet<Genre>();
 	private Set<Character> characters = new HashSet<>();
-
+	private Set<Crew> crews = new HashSet<>(); 
 	@Id
 	@Column(name = "id_movie", unique = true, nullable = false)
 	public int getIdMovie() {
@@ -163,6 +163,18 @@ public class Movie {
 
 	public void setPopularity(double popularity) {
 		this.popularity = popularity;
+	}
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "crew_movie", catalog = "movie", joinColumns = {
+			@JoinColumn(name = "id_movie", nullable = false, updatable = false) },
+			inverseJoinColumns = { @JoinColumn(name = "id_crew",
+					nullable = false, updatable = false) })
+	public Set<Crew> getCrews() {
+		return crews;
+	}
+
+	public void setCrews(Set<Crew> crews) {
+		this.crews = crews;
 	}
 	
 }

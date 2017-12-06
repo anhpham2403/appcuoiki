@@ -33,6 +33,7 @@
 		<mapping class="com.anh.movie.entities.Genre" />
 		<mapping class="com.anh.movie.entities.Character" />
 		<mapping class="com.anh.movie.entities.User" />
+		<mapping class="com.anh.movie.entities.Crew" />
 	</session-factory>
 
 </hibernate-configuration>
