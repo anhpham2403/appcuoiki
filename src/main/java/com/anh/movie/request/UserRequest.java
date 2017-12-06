@@ -53,12 +53,17 @@ public class UserRequest {
 
 	@PermitAll
 	@POST
-	@Path("authentication")
+	@Path("/authentication")
 	@Produces("application/json")
 	@Consumes("application/x-www-form-urlencoded")
 	public Response getUser(@FormParam("username") String username, @FormParam("password") String password) {
 		Date expiry = getExpiryDate(1);
 		User user = authenticate(username, password);
+		if(user==null) {
+			JSONObject object = new JSONObject();
+			object.put("error", "Invalid username or password");
+			return Response.status(501).entity(object.toString()).build();
+		}
 		String jwtString = TokenUtil.getJWTString(username, user.getRoles(), expiry, key);
 		Token token = new Token();
 		token.setAuthToken(jwtString);
@@ -104,15 +109,6 @@ public class UserRequest {
 			logger.info("Invalid username '" + username + "' ");
 			e.printStackTrace();
 			session.getTransaction().rollback();
-			throw new NotAuthorizedException("Invalid username '" + username + "' ");
-		}
-		// we need to actually test the Hash not the password, we should never store the
-		// password in the database.
-		if (user != null) {
-			logger.info("USER AUTHENTICATED");
-		} else {
-			logger.info("USER NOT AUTHENTICATED");
-			throw new NotAuthorizedException("Invalid username or password");
 		}
 		return user;
 	}
