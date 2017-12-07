@@ -1,5 +1,6 @@
 package com.anh.movie.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "movie", catalog = "movie", uniqueConstraints = { @UniqueConstraint(columnNames = { "id_movie" }) })
-public class Movie {
+public class Movie implements Serializable{
 	private int idMovie;
 	private String mImdbId;
 	private String mTitle;

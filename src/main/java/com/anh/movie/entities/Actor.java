@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,7 +38,6 @@ public class Actor implements Serializable {
 	private Set<Character> characters = new HashSet<>();
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_actor", unique = true, nullable = false)
 	public int getIdActor() {
 		return idActor;
