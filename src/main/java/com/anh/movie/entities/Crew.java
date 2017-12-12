@@ -73,7 +73,7 @@ public class Crew {
 	public void setProfilePath(String profilePath) {
 		this.profilePath = profilePath;
 	}
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "crews")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "crews")
 	public List<Movie> getMovies() {
 		return movies;
 	}

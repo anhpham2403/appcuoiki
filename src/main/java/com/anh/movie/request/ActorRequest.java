@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -105,8 +106,10 @@ public class ActorRequest {
 		object.put("place_of_birth", actor.getPlaceOfBirth());
 		object.put("profile_path", actor.getProfilePath());
 		JSONArray array = new JSONArray();
+		Hibernate.initialize(actor.getCharacters());
 		for (Character character : actor.getCharacters()) {
 			org.json.JSONObject object2 = new JSONObject();
+			Hibernate.initialize(character.getMovie());
 			object2.put("id", character.getMovie().getIdMovie());
 			object2.put("title", character.getMovie().getmTitle());
 			object2.put("poster_path", character.getMovie().getmPosterPath());

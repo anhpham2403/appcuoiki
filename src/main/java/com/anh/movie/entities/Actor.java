@@ -130,7 +130,7 @@ public class Actor implements Serializable {
 		this.profilePath = profilePath;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "actor")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actor")
 	public Set<Character> getCharacters() {
 		return characters;
 	}

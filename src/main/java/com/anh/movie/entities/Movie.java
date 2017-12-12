@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Access;
@@ -29,7 +30,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "movie", catalog = "movie", uniqueConstraints = { @UniqueConstraint(columnNames = { "id_movie" }) })
-public class Movie implements Serializable{
+public class Movie implements Serializable {
 	private int idMovie;
 	private String mImdbId;
 	private String mTitle;
@@ -40,10 +41,12 @@ public class Movie implements Serializable{
 	private Date mReleaseDate;
 	private double mVoteAverage;
 	private int mVoteCount;
-	private double popularity; 
+	private double popularity;
 	private Set<Genre> genres = new HashSet<Genre>();
 	private Set<Character> characters = new HashSet<>();
-	private Set<Crew> crews = new HashSet<>(); 
+	private Set<Crew> crews = new HashSet<>();
+	private Set<Review> reviews = new HashSet<>();
+	private Set<Rate> rates = new HashSet<>();
 	@Id
 	@Column(name = "id_movie", unique = true, nullable = false)
 	public int getIdMovie() {
@@ -136,7 +139,7 @@ public class Movie implements Serializable{
 		this.mVoteCount = mVoteCount;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "movie_genre", catalog = "movie", joinColumns = {
 			@JoinColumn(name = "id_movie", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "id_genre", nullable = false, updatable = false) })
@@ -148,7 +151,7 @@ public class Movie implements Serializable{
 		this.genres = genres;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
 	public Set<Character> getCharacters() {
 		return characters;
 	}
@@ -165,11 +168,11 @@ public class Movie implements Serializable{
 	public void setPopularity(double popularity) {
 		this.popularity = popularity;
 	}
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "crew_movie", catalog = "movie", joinColumns = {
-			@JoinColumn(name = "id_movie", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "id_crew",
-					nullable = false, updatable = false) })
+			@JoinColumn(name = "id_movie", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "id_crew", nullable = false, updatable = false) })
 	public Set<Crew> getCrews() {
 		return crews;
 	}
@@ -177,5 +180,24 @@ public class Movie implements Serializable{
 	public void setCrews(Set<Crew> crews) {
 		this.crews = crews;
 	}
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+	public Set<Rate> getRates() {
+		return rates;
+	}
+
+	public void setRates(Set<Rate> rates) {
+		this.rates = rates;
+	}
 	
+	
+
 }

@@ -27,7 +27,7 @@ public class Character implements Serializable {
 	private String character;
 	private String profilePath;
 
-	@ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+	@ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_actor", nullable = false,insertable=false, updatable=false)
 	public Actor getActor() {
 		return actor;
@@ -37,7 +37,7 @@ public class Character implements Serializable {
 		this.actor = actor;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_movie", nullable = false,insertable=false, updatable=false)
 	public Movie getMovie() {
 		return movie;

@@ -7,6 +7,7 @@ import io.jsonwebtoken.impl.crypto.MacProvider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -33,7 +34,7 @@ public class Application extends ResourceConfig { // implements ContextResolver<
 		register(JWTSecurityFilter.class);
 		// turn on Jackson, Moxy isn't that good of a solution.
 		register(JacksonFeature.class);
-
+		register(MultiPartFeature.class);
 		packages("com.anh.movie");
 		register(new AbstractBinder() {
             @Override

@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -253,6 +254,7 @@ public class MovieRequest {
 		object2.put("vote_average", movie.getmVoteAverage());
 		object2.put("vote_count", movie.getmVoteCount());
 		JSONArray JSONArray = new JSONArray();
+		Hibernate.initialize(movie.getGenres());
 		for (Genre genre : movie.getGenres()) {
 			JSONObject genreJson = new JSONObject();
 			genreJson.put("id", genre.getId());
@@ -261,7 +263,9 @@ public class MovieRequest {
 		}
 		object2.put("genres", JSONArray);
 		JSONArray JSONArray2 = new JSONArray();
+		Hibernate.initialize(movie.getCharacters());
 		for (Character character : movie.getCharacters()) {
+			Hibernate.initialize(character.getActor());
 			Actor actor = character.getActor();
 			JSONObject characterJson = new JSONObject();
 			JSONObject actorJson = new JSONObject();
@@ -319,7 +323,6 @@ public class MovieRequest {
 		return Response.status(200).entity(object.toString()).build();
 	}
 
-	
 	@SuppressWarnings("deprecation")
 	@GET
 	@Path("/search")
@@ -465,17 +468,17 @@ public class MovieRequest {
 		session.close();
 		return Response.status(200).entity(array.toString()).build();
 	}
+
 	@GET
 	@Path("/movie_of_crew")
 	@Produces("application/json")
-	public Response getCrewsOfMovie(@QueryParam("page") int page,@QueryParam("id") int idCrew) {
+	public Response getCrewsOfMovie(@QueryParam("page") int page, @QueryParam("id") int idCrew) {
 		SessionFactory factory = HibernateUtils.getSessionFactory();
 		Session session = factory.getCurrentSession();
 		List<Movie> movies = new ArrayList<Movie>();
 		try {
 			session.getTransaction().begin();
-			String sql = "Select movie from " + Movie.class.getName()
-					+ " movie JOIN movie.crews c where c.idCrew = ?";
+			String sql = "Select movie from " + Movie.class.getName() + " movie JOIN movie.crews c where c.idCrew = ?";
 			@SuppressWarnings("unchecked")
 			Query<Movie> query = session.createQuery(sql);
 			query.setParameter(0, idCrew);
@@ -488,7 +491,6 @@ public class MovieRequest {
 			session.getTransaction().rollback();
 		}
 		JSONObject object = new JSONObject();
-		object.put("page", page);
 		JSONArray array = new JSONArray();
 		for (Movie movie : movies) {
 			JSONObject object2 = new JSONObject();
@@ -499,6 +501,7 @@ public class MovieRequest {
 			array.put(object2);
 		}
 		object.put("result", array);
+		object.put("page", page);
 		return Response.status(200).entity(object.toString()).build();
 	}
 }

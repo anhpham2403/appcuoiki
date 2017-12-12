@@ -13,7 +13,6 @@ import com.anh.movie.utils.HibernateUtils;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -28,18 +27,11 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-/**
- * https://simplapi.wordpress.com/2013/01/24/jersey-jax-rs-implements-a-http-basic-auth-decoder/
- */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class JWTSecurityFilter implements ContainerRequestFilter {
 
 	final static Logger logger = Logger.getLogger(JWTSecurityFilter.class.getName());
-
-	/**
-	 * HK2 Injection.
-	 */
 
 	@Context
 	Key key;

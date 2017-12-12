@@ -1,4 +1,4 @@
-package com.anh.movie.request;
+	package com.anh.movie.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class CrewRequest {
 	@GET
 	@Path("/by_movie_id")
 	@Produces("application/json")
-	public Response getActors(@QueryParam("id") int id) {
+	public Response getCrews(@QueryParam("id") int id) {
 		if (id <= 0) {
 			JSONObject JSONObject = new JSONObject();
 			JSONObject.put("error", "id must be greater than 0");
@@ -49,7 +49,6 @@ public class CrewRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 		}
-		JSONObject object = new JSONObject();
 		JSONArray array = new JSONArray();
 		for (Crew crew : crews) {
 			JSONObject object2 = new JSONObject();
@@ -59,8 +58,8 @@ public class CrewRequest {
 			object2.put("profile_path", crew.getProfilePath());
 			array.put(object2);
 		}
-		object.put("result", array);
-		return Response.status(200).entity(object.toString()).build();
+		
+		return Response.status(200).entity(array.toString()).build();
 	}
 	@GET
 	@Path("/{id}")

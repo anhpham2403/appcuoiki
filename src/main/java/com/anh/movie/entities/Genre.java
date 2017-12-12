@@ -48,7 +48,7 @@ public class Genre implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "genres")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "genres")
 	public Set<Movie> getMovies() {
 		return movies;
 	}
