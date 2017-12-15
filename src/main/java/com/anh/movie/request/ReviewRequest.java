@@ -1,7 +1,6 @@
 package com.anh.movie.request;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -37,7 +36,6 @@ public class ReviewRequest {
 	@Context
 	SecurityContext securityContext;
 
-	@SuppressWarnings("deprecation")
 	@POST
 	@RolesAllowed({ "user", "admin" })
 	@Produces("application/json")

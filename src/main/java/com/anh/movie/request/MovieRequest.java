@@ -2,11 +2,8 @@ package com.anh.movie.request;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,14 +14,12 @@ import javax.ws.rs.core.Response;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.anh.movie.entities.Character;
-import com.anh.movie.entities.Crew;
 import com.anh.movie.entities.Actor;
+import com.anh.movie.entities.Character;
 import com.anh.movie.entities.Genre;
 import com.anh.movie.entities.Movie;
 import com.anh.movie.utils.Constant;

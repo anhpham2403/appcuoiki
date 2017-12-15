@@ -1,6 +1,3 @@
-/**
- * Created by Philip A Senger on November 10, 2015
- */
 package com.anh.movie;
 
 import io.jsonwebtoken.impl.crypto.MacProvider;
@@ -17,7 +14,7 @@ import java.security.Key;
 import java.util.Date;
 
 @ApplicationPath("/")
-public class Application extends ResourceConfig { // implements ContextResolver<ObjectMapper> {
+public class Application extends ResourceConfig { 
 
 	private static Key key;
 
@@ -28,11 +25,8 @@ public class Application extends ResourceConfig { // implements ContextResolver<
 	public Application(final Key key) {
 		this.setKey(key);
 		register(LoggingFilter.class);
-		// roles security
 		register(RolesAllowedDynamicFeature.class);
-		// jwt filter
 		register(JWTSecurityFilter.class);
-		// turn on Jackson, Moxy isn't that good of a solution.
 		register(JacksonFeature.class);
 		register(MultiPartFeature.class);
 		packages("com.anh.movie");

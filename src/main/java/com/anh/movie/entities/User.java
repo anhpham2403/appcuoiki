@@ -1,7 +1,9 @@
 
 package com.anh.movie.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,9 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "user", catalog = "movie", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
@@ -27,7 +28,9 @@ public class User implements Serializable {
 	private String filePath;
 	private Set<Review> reviews = new HashSet<>();
 	private Set<Rate> rates = new HashSet<>();
-	public User() { 
+	private Set<Favorite> favorites = new HashSet<>();
+
+	public User() {
 	}
 
 	@Id
@@ -40,7 +43,7 @@ public class User implements Serializable {
 		this.username = username;
 	}
 
-	@Column(name = "email", nullable = false, length = 45)
+	@Column(name = "email", length = 45)
 	public String getEmail() {
 		return email;
 	}
@@ -49,7 +52,7 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "role", nullable = false, length = 45)
+	@Column(name = "role", length = 45)
 	public String getRoles() {
 		return roles;
 	}
@@ -58,7 +61,7 @@ public class User implements Serializable {
 		this.roles = roles;
 	}
 
-	@Column(name = "password", nullable = false, length = 45)
+	@Column(name = "password", length = 45)
 	public String getPassword() {
 		return password;
 	}
@@ -67,7 +70,7 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	@Column(name = "name", nullable = false, length = 45)
+	@Column(name = "name", length = 45)
 	public String getName() {
 		return name;
 	}
@@ -76,7 +79,7 @@ public class User implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "file_path", nullable = false, length = 255)
+	@Column(name = "file_path", length = 255)
 	public String getFilePath() {
 		return filePath;
 	}
@@ -84,6 +87,7 @@ public class User implements Serializable {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	public Set<Review> getReviews() {
 		return reviews;
@@ -92,6 +96,7 @@ public class User implements Serializable {
 	public void setReviews(Set<Review> reviews) {
 		this.reviews = reviews;
 	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	public Set<Rate> getRates() {
 		return rates;
@@ -100,5 +105,14 @@ public class User implements Serializable {
 	public void setRates(Set<Rate> rates) {
 		this.rates = rates;
 	}
-	
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	public Set<Favorite> getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(Set<Favorite> favorites) {
+		this.favorites = favorites;
+	}
+
 }

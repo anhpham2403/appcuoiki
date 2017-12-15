@@ -5,17 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sample</groupId>
-	<artifactId>Jersey2-Security-JWT</artifactId>
+	<artifactId>anh</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>Jersey2-Security-JWT</name>
-
-	<contributors>
-		<contributor>
-			<name>Philip A Senger</name>
-			<email>philip.a.senger@cngrgroup.com</email>
-		</contributor>
-	</contributors>
+	<name>anh</name>
 
 	<dependencyManagement>
 		<dependencies>
@@ -71,19 +64,7 @@
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.2</version>
 		</dependency>
-
-
-		<!-- <dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-api</artifactId> 
-			<version>2.4.1</version> </dependency> <dependency> <groupId>org.apache.logging.log4j</groupId> 
-			<artifactId>log4j-core</artifactId> <version>2.4.1</version> </dependency> 
-			<dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-slf4j-impl</artifactId> 
-			<version>2.4.1</version> </dependency> <dependency> <groupId>org.slf4j</groupId> 
-			<artifactId>slf4j-api</artifactId> <version>1.7.12</version> </dependency> -->
-
-
-		<!-- This POJO to JSON mapper is not as good as jackson + genson <dependency> 
-			<groupId>org.glassfish.jersey.media</groupId> <artifactId>jersey-media-moxy</artifactId> 
-			</dependency> -->
+		
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
@@ -159,9 +140,8 @@
 			<groupId>org.glassfish.jersey.ext</groupId>
 			<artifactId>jersey-bean-validation</artifactId>
 			<version>${jersey.version}</version>
-			<!-- <exclusions> <exclusion> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator</artifactId> 
-				</exclusion> </exclusions> -->
 		</dependency>
+		
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>

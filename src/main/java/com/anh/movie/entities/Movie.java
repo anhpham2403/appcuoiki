@@ -1,24 +1,15 @@
 package com.anh.movie.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -47,6 +38,8 @@ public class Movie implements Serializable {
 	private Set<Crew> crews = new HashSet<>();
 	private Set<Review> reviews = new HashSet<>();
 	private Set<Rate> rates = new HashSet<>();
+	private Set<Favorite> favorites = new HashSet<>();
+
 	@Id
 	@Column(name = "id_movie", unique = true, nullable = false)
 	public int getIdMovie() {
@@ -180,6 +173,7 @@ public class Movie implements Serializable {
 	public void setCrews(Set<Crew> crews) {
 		this.crews = crews;
 	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
 	public Set<Review> getReviews() {
 		return reviews;
@@ -197,7 +191,17 @@ public class Movie implements Serializable {
 	public void setRates(Set<Rate> rates) {
 		this.rates = rates;
 	}
-	
-	
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+	public Set<Favorite> getFavorites() {
+		return favorites;
+	}
+
+	/**
+	 * @param favorites
+	 *            the favorites to set
+	 */
+	public void setFavorites(Set<Favorite> favorites) {
+		this.favorites = favorites;
+	}
 }

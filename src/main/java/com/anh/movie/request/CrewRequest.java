@@ -16,11 +16,7 @@ import org.hibernate.query.Query;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.anh.movie.entities.Actor;
-import com.anh.movie.entities.Character;
 import com.anh.movie.entities.Crew;
-import com.anh.movie.entities.Movie;
-import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
 
 @Path("/crew")

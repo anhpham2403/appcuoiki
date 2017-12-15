@@ -1,6 +1,3 @@
-/**
- * Created by Philip A Senger on November 10, 2015
- */
 package com.anh.movie;
 
 

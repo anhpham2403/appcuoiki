@@ -6,17 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Key;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletContext;
-import javax.servlet.annotation.MultipartConfig;
 import javax.validation.constraints.NotNull;
 import javax.validation.executable.ValidateOnExecution;
 import javax.ws.rs.Consumes;
@@ -42,11 +38,8 @@ import org.hibernate.query.Query;
 import org.json.JSONObject;
 
 import com.anh.movie.TokenUtil;
-import com.anh.movie.entities.Actor;
-import com.anh.movie.entities.Movie;
 import com.anh.movie.entities.Token;
 import com.anh.movie.entities.User;
-import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
 
 @Path("/user")

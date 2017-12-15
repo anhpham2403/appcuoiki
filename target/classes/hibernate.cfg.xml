@@ -39,6 +39,7 @@
 		<mapping class="com.anh.movie.entities.Crew" />
 		<mapping class="com.anh.movie.entities.Rate" />
 		<mapping class="com.anh.movie.entities.Review" />
+		<mapping class="com.anh.movie.entities.Favorite" />
 	</session-factory>
 
 </hibernate-configuration>

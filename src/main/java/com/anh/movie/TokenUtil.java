@@ -13,9 +13,6 @@ import java.util.Date;
 public class TokenUtil {
 
 	public static String getJWTString(String username, String roles, Date expires, Key key) {
-		// Issue a token (can be a random String persisted to a database or a JWT token)
-		// The issued token must be associated to a user
-		// Return the issued token
 		if (username == null) {
 			throw new NullPointerException("null username is illegal");
 		}

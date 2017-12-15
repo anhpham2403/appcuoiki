@@ -51,7 +51,7 @@ public class Favorite {
 	 * @param movies
 	 *            the movies to set
 	 */
-	public void setMovies(Movie movie) {
+	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
 

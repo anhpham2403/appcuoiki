@@ -1,7 +1,6 @@
 package com.anh.movie.request;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -20,7 +19,6 @@ import org.json.JSONObject;
 
 import com.anh.movie.entities.Actor;
 import com.anh.movie.entities.Character;
-import com.anh.movie.entities.Movie;
 import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
 
