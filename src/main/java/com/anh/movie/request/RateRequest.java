@@ -90,7 +90,7 @@ public class RateRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			JSONObject object = new JSONObject();
-			object.put("error", "cant rate this movie");
+			object.put("message", "cant rate this movie");
 			return Response.status(200).entity(object.toString()).build();
 		}
 		JSONObject object = new JSONObject();

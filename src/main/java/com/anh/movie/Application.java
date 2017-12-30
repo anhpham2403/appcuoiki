@@ -23,7 +23,7 @@ public class Application extends ResourceConfig {
 	}
 
 	public Application(final Key key) {
-		this.setKey(key);
+		Application.setKey(key);
 		register(LoggingFilter.class);
 		register(RolesAllowedDynamicFeature.class);
 		register(JWTSecurityFilter.class);

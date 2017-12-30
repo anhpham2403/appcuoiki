@@ -16,9 +16,7 @@ public class Main {
     final static Logger logger = Logger.getLogger(Main.class.getName());
 
     public static HttpServer startServer() {
-
         Key key = MacProvider.generateKey();
-
         final ResourceConfig rc = new Application(key);
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }

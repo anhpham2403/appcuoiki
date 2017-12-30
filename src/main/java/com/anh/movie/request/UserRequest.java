@@ -226,7 +226,7 @@ public class UserRequest {
 			if (!user.getPassword().equals(passwordOld)) {
 				JSONObject object = new JSONObject();
 				object.put("error", "error password");
-				return Response.status(501).entity(object.toString()).build();
+				return Response.status(501).entity("error password").build();
 			}
 			user.setUsername(username);
 			user.setName(name);

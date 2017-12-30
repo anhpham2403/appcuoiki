@@ -108,7 +108,7 @@ public class FavoriteRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			JSONObject object = new JSONObject();
-			object.put("message", "failure");
+			object.put("message", "This film has been added to favorites");
 			return Response.status(200).entity(object.toString()).build();
 		}
 		JSONObject object = new JSONObject();
@@ -153,7 +153,7 @@ public class FavoriteRequest {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			JSONObject object = new JSONObject();
-			object.put("message", "This film has been added to favorites");
+			object.put("message", "Failure");
 			return Response.status(200).entity(object.toString()).build();
 		}
 		JSONObject object = new JSONObject();
