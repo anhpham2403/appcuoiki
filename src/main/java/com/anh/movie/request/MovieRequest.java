@@ -22,7 +22,6 @@ import com.anh.movie.entities.Actor;
 import com.anh.movie.entities.Character;
 import com.anh.movie.entities.Genre;
 import com.anh.movie.entities.Movie;
-import com.anh.movie.entities.Video;
 import com.anh.movie.utils.Constant;
 import com.anh.movie.utils.HibernateUtils;
 
@@ -272,12 +271,6 @@ public class MovieRequest {
 			characterJson.put("profile_path", character.getProfilePath());
 			JSONArray2.put(characterJson);
 		}
-		JSONArray JSONArray3 = new JSONArray();
-		Hibernate.initialize(movie.getVideos());
-		for (Video video : movie.getVideos()) {
-			JSONArray3.put(video.getId());
-		}
-		object2.put("videos", JSONArray3);
 		return Response.status(200).entity(object2.toString()).build();
 	}
 

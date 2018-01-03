@@ -39,7 +39,6 @@ public class Movie implements Serializable {
 	private Set<Review> reviews = new HashSet<>();
 	private Set<Rate> rates = new HashSet<>();
 	private Set<Favorite> favorites = new HashSet<>();
-	private Set<Video> videos = new HashSet<>();
 	@Id
 	@Column(name = "id_movie", unique = true, nullable = false)
 	public int getIdMovie() {
@@ -204,14 +203,4 @@ public class Movie implements Serializable {
 	public void setFavorites(Set<Favorite> favorites) {
 		this.favorites = favorites;
 	}
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
-	public Set<Video> getVideos() {
-		return videos;
-	}
-
-	public void setVideos(Set<Video> videos) {
-		this.videos = videos;
-	}
-	
 }
