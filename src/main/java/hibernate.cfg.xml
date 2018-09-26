@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+		<!-- Database connection settings -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+<!-- 		<property name="connection.url">jdbc:mysql://node16290-theanh.kilatiron.com/movie?serverTimezone=UTC</property>
+ -->		 <property name="connection.url">jdbc:mysql://localhost:3306/movie?serverTimezone=UTC</property> 
+		<property name="connection.username">root</property>
+		 <property name="connection.password">root</property>
+<!-- 		<property name="connection.password">MQNfqo40991</property>
+ -->
+		<!-- JDBC connection pool (use the built-in) -->
+		<property name="connection.pool_size">30</property>
+
+		<!-- SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Disable the second-level cache -->
+		<property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+		
+		<property name="hibernate.enable_lazy_load_no_trans">true</property>
+
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">false</property>
+
+		<mapping class="com.anh.movie.entities.Movie" />
+		<mapping class="com.anh.movie.entities.Actor" />
+		<mapping class="com.anh.movie.entities.Genre" />
+		<mapping class="com.anh.movie.entities.Character" />
+		<mapping class="com.anh.movie.entities.User" />
+		<mapping class="com.anh.movie.entities.Crew" />
+		<mapping class="com.anh.movie.entities.Rate" />
+		<mapping class="com.anh.movie.entities.Review" />
+		<mapping class="com.anh.movie.entities.Favorite" />
+	</session-factory>
+
+</hibernate-configuration>
