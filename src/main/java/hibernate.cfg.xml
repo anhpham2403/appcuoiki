@@ -7,11 +7,9 @@
 
 	<session-factory>
 		<!-- Database connection settings -->
-		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.driver_class">org.postgresql.Driver</property>
 <!-- 		<property name="connection.url">jdbc:mysql://node16290-theanh.kilatiron.com/movie?serverTimezone=UTC</property>
- -->		 <property name="connection.url">jdbc:mysql://localhost:3306/movie?serverTimezone=UTC</property> 
-		<property name="connection.username">root</property>
-		 <property name="connection.password">root</property>
+ -->		 <property name="connection.url">jdbc:postgres://oihbmptwjijhim:c798b703b3b373837dc57aaf575f8f9c2a784c2a69e05c1a15e7f9ffc488985c@ec2-54-235-160-57.compute-1.amazonaws.com:5432/d2g885q8ul8u6f?serverTimezone=UTC</property> 
 <!-- 		<property name="connection.password">MQNfqo40991</property>
  -->
 		<!-- JDBC connection pool (use the built-in) -->

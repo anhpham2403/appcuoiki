@@ -1,1 +1,2 @@
-web: java -jar target/currency.jar
+web: java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/*.war
+

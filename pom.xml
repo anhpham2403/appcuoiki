@@ -30,12 +30,12 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>5.2.2.Final</version>
+			<version>5.3.6.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-java8</artifactId>
-			<version>5.2.2.Final</version>
+			<version>5.3.6.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -198,7 +198,7 @@
 											hibernate-enhance-maven-plugin
 										</artifactId>
 										<versionRange>
-											[5.2.2.Final,)
+											[5.3.6.Final,)
 										</versionRange>
 										<goals>
 											<goal>enhance</goal>
@@ -273,7 +273,7 @@
 			<plugin>
 				<groupId>org.hibernate.orm.tooling</groupId>
 				<artifactId>hibernate-enhance-maven-plugin</artifactId>
-				<version>5.2.2.Final</version>
+				<version>5.3.6.Final</version>
 				<executions>
 					<execution>
 						<configuration>
@@ -285,6 +285,27 @@
 					</execution>
 				</executions>
 			</plugin>
+ <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+            <execution>
+                <phase>package</phase>
+                <goals><goal>copy</goal></goals>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>com.github.jsimone</groupId>
+                            <artifactId>webapp-runner</artifactId>
+                            <version>8.5.11.3</version>
+                            <destFileName>webapp-runner.jar</destFileName>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
 		</plugins>
 	</build>
 
