@@ -33,6 +33,7 @@ public class Main {
 
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws IOException {
+		syncData();
 		final HttpServer server = startServer();
 		logger.info(String.format(
 				"Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...",
@@ -40,7 +41,6 @@ public class Main {
 		System.in.read();
 		server.stop();
 		System.out.print("da vao day");
-		syncData();
 	}
 
 	public static void syncData() {
