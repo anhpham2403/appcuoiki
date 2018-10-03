@@ -23,6 +23,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Key;
 import java.util.Date;
 
@@ -31,8 +33,6 @@ public class Application extends ResourceConfig {
 
 	private static Key key;
 	private static DatabaseReference  mDatabase;
-	@Context 
-	ServletContext servletContext;
 	
 	public Application() {
 		this(MacProvider.generateKey());
@@ -54,18 +54,9 @@ public class Application extends ResourceConfig {
         });
 		property("jersey.config.beanValidation.enableOutputValidationErrorEntity.server", "true");
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-		String path = null;
-		System.out.println("file path1:" + path);
-		try {
-			path = servletContext.getResource("/WEB-INF/currencyserver240395-bd7933f24eae.json").getPath();
-		} catch (MalformedURLException e) {
-			System.out.println("da vao day");
-
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-		}
-		System.out.println("file path2:" + path);
+		Path path = null;
+		path = Paths.get("webapp/WEB-INF/currencyserver240395-bd7933f24eae.json");
+		System.out.println("file path2:" + path.toString());
 		syncData(path);
 
 	}
@@ -78,16 +69,16 @@ public class Application extends ResourceConfig {
 		Application.key = key;
 	}
 
-	public static void syncData(String path) {
-		System.out.println("file path4:" + path);
+	public static void syncData(Path path) {
+		System.out.println("file path4:" + path.toString());
 		FileInputStream serviceAccount = null;
 		try {
-			serviceAccount = new FileInputStream(path);
+			serviceAccount = new FileInputStream(path.toString());
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("file path3:" + path);
+		System.out.println("file path3:" + path.toString());
 		FirebaseOptions options = null;
 		try {
 			options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
