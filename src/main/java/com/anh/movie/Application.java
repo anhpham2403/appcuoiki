@@ -15,11 +15,14 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Context;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.security.Key;
 import java.util.Date;
 
@@ -28,7 +31,9 @@ public class Application extends ResourceConfig {
 
 	private static Key key;
 	private static DatabaseReference  mDatabase;
-
+	@Context 
+	ServletContext servletContext;
+	
 	public Application() {
 		this(MacProvider.generateKey());
 	}
@@ -49,7 +54,14 @@ public class Application extends ResourceConfig {
         });
 		property("jersey.config.beanValidation.enableOutputValidationErrorEntity.server", "true");
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-		syncData();
+		String path = null;
+		try {
+			path = servletContext.getResource("/WEB-INF/currencyserver240395-bd7933f24eae.json").getPath();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		syncData(path);
 
 	}
 
@@ -61,10 +73,11 @@ public class Application extends ResourceConfig {
 		Application.key = key;
 	}
 
-	public static void syncData() {
+	public static void syncData(String path) {
+		
 		FileInputStream serviceAccount = null;
 		try {
-			serviceAccount = new FileInputStream("/src/main/java/currencyserver240395-bd7933f24eae.json");
+			serviceAccount = new FileInputStream(path);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
