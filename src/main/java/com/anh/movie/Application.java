@@ -31,8 +31,6 @@ public class Application extends ResourceConfig {
 
 	private static Key key;
 	private static DatabaseReference  mDatabase;
-	@Context 
-	ServletContext servletContext;
 	
 	public Application() {
 		this(MacProvider.generateKey());
@@ -56,15 +54,7 @@ public class Application extends ResourceConfig {
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
 		String path = null;
 		System.out.println("file path1:" + path);
-		try {
-			path = servletContext.getResource("/WEB-INF/currencyserver240395-bd7933f24eae.json").getPath();
-		} catch (MalformedURLException e) {
-			System.out.println("da vao day");
-
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-		}
+		path = "WEB-INF/currencyserver240395-bd7933f24eae.json";
 		System.out.println("file path2:" + path);
 		syncData(path);
 
