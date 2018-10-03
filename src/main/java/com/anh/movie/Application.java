@@ -64,7 +64,7 @@ public class Application extends ResourceConfig {
 	public static void syncData() {
 		FileInputStream serviceAccount = null;
 		try {
-			serviceAccount = new FileInputStream("currencyserver240395-bd7933f24eae.json");
+			serviceAccount = new FileInputStream("/main/java/currencyserver240395-bd7933f24eae.json");
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
