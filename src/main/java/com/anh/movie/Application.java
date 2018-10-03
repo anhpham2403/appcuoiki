@@ -55,14 +55,17 @@ public class Application extends ResourceConfig {
 		property("jersey.config.beanValidation.enableOutputValidationErrorEntity.server", "true");
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
 		String path = null;
-		System.out.println("file path:" + path);
+		System.out.println("file path1:" + path);
 		try {
 			path = servletContext.getResource("/WEB-INF/currencyserver240395-bd7933f24eae.json").getPath();
 		} catch (MalformedURLException e) {
+			System.out.println("da vao day");
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
 		}
-		System.out.println("file path:" + path);
+		System.out.println("file path2:" + path);
 		syncData(path);
 
 	}
@@ -76,7 +79,7 @@ public class Application extends ResourceConfig {
 	}
 
 	public static void syncData(String path) {
-		System.out.println("file path:" + path);
+		System.out.println("file path4:" + path);
 		FileInputStream serviceAccount = null;
 		try {
 			serviceAccount = new FileInputStream(path);
@@ -84,14 +87,17 @@ public class Application extends ResourceConfig {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("file path:" + path);
+		System.out.println("file path3:" + path);
 		FirebaseOptions options = null;
 		try {
 			options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
 					.setDatabaseUrl("https://currencyserver240395.firebaseio.com/").build();
 		} catch (IOException e) {
+			System.out.println("da vao day2");
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
 		}
 		FirebaseApp.initializeApp(options);
 		mDatabase = FirebaseDatabase.getInstance().getReference("currency");
