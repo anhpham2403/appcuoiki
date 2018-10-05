@@ -36,7 +36,26 @@ public class RateRequest {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity(new Gson().toJson(list)).build();
+		JsonArray array = new JsonArray();
+		DecimalFormat twoDecimals = new DecimalFormat("#.#####");
+		for (Feed feed : list) {
+			JsonObject jsonObject = new JsonObject();
+			JsonObject currency = new JsonObject();
+			currency.addProperty("id", idBase.toUpperCase());
+			jsonObject.add("currency1", currency);
+			Double double1 = 0.00000;
+			try {
+				double1 = Double.valueOf(feed.getDescription());
+			} catch (NumberFormatException e) {
+			}
+			jsonObject.addProperty("rate1", twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
+			currency = new JsonObject();
+			currency.addProperty("id", feed.getTitle().toUpperCase());
+			jsonObject.add("currency2", currency);
+			jsonObject.addProperty("rate2", twoDecimals.format(double1));
+			array.add(jsonObject);
+		}
+		return Response.status(200).entity(new Gson().toJson(array)).build();
 	}
 	
 	public List<Feed> parseData(String idCurrency) throws MalformedURLException {
