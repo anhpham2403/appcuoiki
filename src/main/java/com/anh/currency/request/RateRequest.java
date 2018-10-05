@@ -1,7 +1,6 @@
 package com.anh.currency.request;
 
 import java.net.MalformedURLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +15,6 @@ import javax.ws.rs.core.Response;
 import com.anh.currency.RSSFeedParser;
 import com.anh.currency.model.Feed;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 @Path("/rate")
 public class RateRequest {
@@ -31,36 +28,17 @@ public class RateRequest {
 		List<Feed> list = new ArrayList<>();
 		try {
 			listRates = parseData(idBase);
-			for (Feed feed : listRates) {
-				if (listId.contains(feed.getTitle())) {
+			for(Feed feed: listRates) {
+				if(listId.contains(feed.getTitle())) {
 					list.add(feed);
 				}
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		JsonArray array = new JsonArray();
-		DecimalFormat twoDecimals = new DecimalFormat("#.#####");
-		for (Feed feed : list) {
-			JsonObject jsonObject = new JsonObject();
-			JsonObject currency = new JsonObject();
-			currency.addProperty("id", idBase.toUpperCase());
-			jsonObject.add("currency1", currency);
-			Double double1 = 0.0000;
-			try {
-				double1 = Double.valueOf(feed.getDescription());
-			} catch (NumberFormatException e) {
-			}
-			jsonObject.addProperty("rate1", twoDecimals.format(double1 != 0.0000 ? (double) 1 / double1 : double1));
-			currency = new JsonObject();
-			currency.addProperty("id", feed.getTitle().toUpperCase());
-			jsonObject.add("currency2", currency);
-			jsonObject.addProperty("rate2", twoDecimals.format(feed.getDescription()));
-			array.add(jsonObject);
-		}
-		return Response.status(200).entity(array.toString()).build();
+		return Response.status(200).entity(new Gson().toJson(list)).build();
 	}
-
+	
 	public List<Feed> parseData(String idCurrency) throws MalformedURLException {
 		String urlHost = "https://" + idCurrency + URL_RATE;
 		RSSFeedParser parser = new RSSFeedParser(urlHost);
