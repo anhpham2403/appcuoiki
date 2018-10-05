@@ -1,7 +1,6 @@
 package com.anh.currency.request;
 
 import java.net.MalformedURLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +15,6 @@ import javax.ws.rs.core.Response;
 import com.anh.currency.RSSFeedParser;
 import com.anh.currency.model.Feed;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 @Path("/rate")
 public class RateRequest {
@@ -31,8 +28,8 @@ public class RateRequest {
 		List<Feed> list = new ArrayList<>();
 		try {
 			listRates = parseData(idBase);
-			for (Feed feed : listRates) {
-				if (listId.contains(feed.getTitle())) {
+			for(Feed feed: listRates) {
+				if(listId.contains(feed.getTitle())) {
 					list.add(feed);
 				}
 			}
@@ -60,7 +57,7 @@ public class RateRequest {
 		}
 		return Response.status(200).entity(new Gson().toJson(array)).build();
 	}
-
+	
 	public List<Feed> parseData(String idCurrency) throws MalformedURLException {
 		String urlHost = "https://" + idCurrency + URL_RATE;
 		RSSFeedParser parser = new RSSFeedParser(urlHost);
