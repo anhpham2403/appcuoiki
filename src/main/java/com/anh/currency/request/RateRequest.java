@@ -48,11 +48,11 @@ public class RateRequest {
 				double1 = Double.valueOf(feed.getDescription());
 			} catch (NumberFormatException e) {
 			}
-			jsonObject.addProperty("rate1", twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
+			jsonObject.addProperty("rate2", twoDecimals.format(double1));
 			currency = new JsonObject();
 			currency.addProperty("id", feed.getTitle().toUpperCase());
 			jsonObject.add("currency2", currency);
-			jsonObject.addProperty("rate2", twoDecimals.format(double1));
+			jsonObject.addProperty("rate1", twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
 			array.add(jsonObject);
 		}
 		return Response.status(200).entity(new Gson().toJson(array)).build();
