@@ -43,7 +43,7 @@ public class MainApplicationListener implements ApplicationEventListener {
 	public void onEvent(ApplicationEvent event) {
 		switch (event.getType()) {
 		case INITIALIZATION_FINISHED:
-			InputStream serviceAccount = null;
+		/*	InputStream serviceAccount = null;
 			serviceAccount = ctx.getResourceAsStream("/WEB-INF/currencyserver240395-bd7933f24eae.json");
 			FirebaseOptions options = null;
 			try {
@@ -74,7 +74,7 @@ public class MainApplicationListener implements ApplicationEventListener {
 					}
 
 				}
-			}).start();
+			}).start();*/
 		}
 	}
 

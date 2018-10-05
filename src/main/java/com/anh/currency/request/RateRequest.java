@@ -1,6 +1,7 @@
 package com.anh.currency.request;
 
 import java.net.MalformedURLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,8 @@ import javax.ws.rs.core.Response;
 import com.anh.currency.RSSFeedParser;
 import com.anh.currency.model.Feed;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Path("/rate")
 public class RateRequest {
@@ -48,11 +51,11 @@ public class RateRequest {
 				double1 = Double.valueOf(feed.getDescription());
 			} catch (NumberFormatException e) {
 			}
-			jsonObject.addProperty("rate2", twoDecimals.format(double1));
+			jsonObject.addProperty("rate1", twoDecimals.format(double1));
 			currency = new JsonObject();
 			currency.addProperty("id", feed.getTitle().toUpperCase());
 			jsonObject.add("currency2", currency);
-			jsonObject.addProperty("rate1", twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
+			jsonObject.addProperty("rate2", twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
 			array.add(jsonObject);
 		}
 		return Response.status(200).entity(new Gson().toJson(array)).build();
