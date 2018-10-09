@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.xml.stream.XMLEventReader;
@@ -83,6 +84,21 @@ public class RSSFeedParser {
 						feed.setTitle(title);
 						feed.setPubDate(pubdate);
 						listFeeds.add(feed);
+						Calendar calendar = Calendar.getInstance();
+						List<String> priorities = new ArrayList<String>();
+						if(calendar.get(Calendar.MINUTE) <= 20 && calendar.get(Calendar.HOUR_OF_DAY) == 0) {
+							if(calendar.get(Calendar.DAY_OF_YEAR) == 1) {
+								priorities.add("year");
+							}
+							if(calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+								priorities.add("month");
+							}
+							if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+								priorities.add("week");
+							}
+							priorities.add("day");
+						}
+						feed.setPriorities(priorities);
 						isItem = false;
 						continue;
 					}

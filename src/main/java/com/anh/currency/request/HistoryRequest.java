@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
@@ -34,12 +35,22 @@ public class HistoryRequest {
 	@GET
 	@Path("/{id_base}")
 	@Produces("application/json")
+	// Chu thich
+	// 0: lay het
+	// 1: ngay
+	// 2: tuan
+	// 3: thang
+	// 4: nam
 	public Response getUser(@PathParam("id_base") String idBase, @QueryParam("id") String idCurrency,
-			@QueryParam("to") long dateTo, @QueryParam("from") long dateFrom) {
+			@QueryParam("to") long dateTo, @QueryParam("from") long dateFrom, @QueryParam("priority") String priority) {
 		mDatabase = FirebaseDatabase.getInstance().getReference("currency");
 		List<Feed> feeds = new ArrayList<>();
 		CountDownLatch latch = new CountDownLatch(1);
-		mDatabase.child(idBase).child(idCurrency).addListenerForSingleValueEvent(new ValueEventListener() {
+		Query query = mDatabase.child(idBase).child(idCurrency);
+		if (!priority.isEmpty()) {
+			query = query.orderByChild("priorities").equalTo(priority);
+		}
+		query.addListenerForSingleValueEvent(new ValueEventListener() {
 
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
