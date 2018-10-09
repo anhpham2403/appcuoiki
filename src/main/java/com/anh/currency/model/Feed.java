@@ -1,21 +1,24 @@
 package com.anh.currency.model;
 
+import java.util.List;
+
 import com.google.firebase.database.IgnoreExtraProperties;
-import com.google.gson.annotations.SerializedName;
 
 @IgnoreExtraProperties
 public class Feed {
-	
+
 	private String description;
 	private String pubDate;
 	private String title;
+	private List<String> priorities;
 
 	public Feed() {
 	}
 
 	@Override
 	public String toString() {
-		return "Feed [title=" + title + ", pubDate=" + pubDate + ", description=" + description + "]";
+		return "Feed [description=" + description + ", pubDate=" + pubDate + ", title=" + title + ", priority="
+				+ priorities + "]";
 	}
 
 	public String getDescription() {
@@ -41,4 +44,13 @@ public class Feed {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+	public List<String> getPriorities() {
+		return priorities;
+	}
+
+	public void setPriorities(List<String> priorities) {
+		this.priorities = priorities;
+	}
+
 }
