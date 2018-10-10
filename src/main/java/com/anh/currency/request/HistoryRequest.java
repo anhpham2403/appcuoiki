@@ -1,9 +1,11 @@
 package com.anh.currency.request;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -24,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 @Path("/history")
 public class HistoryRequest {
@@ -54,9 +59,9 @@ public class HistoryRequest {
 
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
+				SimpleDateFormat dt = new SimpleDateFormat("EEE MMM dd yyyyy hh:mm:ss z");
 				for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 					Feed feed = snapshot.getValue(Feed.class);
-					SimpleDateFormat dt = new SimpleDateFormat("EEE MMM dd yyyyy hh:mm:ss z");
 					Calendar time = Calendar.getInstance();
 					try {
 						time.setTime(dt.parse(feed.getPubDate()));
@@ -67,9 +72,36 @@ public class HistoryRequest {
 						feeds.add(feed);
 					}
 				}
+				JsonArray array = new JsonArray();
+				DecimalFormat twoDecimals = new DecimalFormat("#.#####");
 				Gson gson = new Gson();
+				for (Feed feed : feeds) {
+					JsonObject jsonObject = new JsonObject();
+					JsonObject currency = new JsonObject();
+					currency.addProperty("id", idBase.toUpperCase());
+					jsonObject.add("currency1", currency);
+					Double double1 = 0.00000;
+					try {
+						double1 = Double.valueOf(feed.getDescription());
+					} catch (NumberFormatException e) {
+					}
+					jsonObject.addProperty("rate1", twoDecimals.format(double1));
+					currency = new JsonObject();
+					currency.addProperty("id", feed.getTitle().toUpperCase());
+					jsonObject.add("currency2", currency);
+					jsonObject.addProperty("rate2", twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
+					Calendar time = Calendar.getInstance();
+					try {
+						time.setTime(dt.parse(feed.getPubDate()));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					jsonObject.addProperty("time",time.getTimeInMillis());
+					array.add(jsonObject);
+				}
 				String json = gson.toJson(feeds);
-				response = Response.status(200).entity(json).build();
+				response = Response.status(200).entity(new Gson().toJson(array)).build();
 				latch.countDown();
 			}
 
