@@ -14,6 +14,7 @@ import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
 
 import com.anh.currency.model.Feed;
+import com.anh.currency.model.FeedWithPriority;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -85,15 +86,26 @@ public class MainApplicationListener implements ApplicationEventListener {
 
 	public void syncData(Feed feed, String idCurrency) {
 		mDatabase = FirebaseDatabase.getInstance().getReference("currency");
-		mDatabase.child(idCurrency.toLowerCase()).child(feed.getTitle().toLowerCase()).child(mDatabase.push().getKey()).setValueAsync(feed);
+		mDatabase.child(idCurrency.toLowerCase()).child(feed.getTitle().toLowerCase()).child(mDatabase.push().getKey())
+				.setValueAsync(feed);
+	}
+
+	public void syncData(FeedWithPriority feed, String idCurrency) {
+		mDatabase = FirebaseDatabase.getInstance().getReference("currency");
+		mDatabase.child(idCurrency.toLowerCase()).child(feed.getTitle().toLowerCase()).child(mDatabase.push().getKey())
+				.setValueAsync(feed);
 	}
 
 	public void parseData(String idCurrency) throws MalformedURLException {
 		String urlHost = "https://" + idCurrency + URL_RATE;
 		RSSFeedParser parser = new RSSFeedParser(urlHost);
-		List<Feed> listFeed = parser.readFeed();
-		for (Feed feed : listFeed) {
-			syncData(feed, idCurrency);
+		List<FeedWithPriority> listFeed = parser.readFeed();
+		for (FeedWithPriority feed : listFeed) {
+			if (feed.getPriority() == 0) {
+				syncData(new Feed(feed), idCurrency);
+			} else {
+				syncData(feed, idCurrency);
+			}
 		}
 	}
 }
