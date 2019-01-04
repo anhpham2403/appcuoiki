@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainApplicationListener implements ApplicationEventListener {
 
 	public static final String URL_RATE = ".fxexchangerate.com/rss.xml";
-	public static final int TIME_RELOAD = 1200000;
+	public static final int TIME_RELOAD = 1800000;
 	@Context
 	private ServletContext ctx;
 	private static DatabaseReference mDatabase;
@@ -45,11 +45,11 @@ public class MainApplicationListener implements ApplicationEventListener {
 		switch (event.getType()) {
 		case INITIALIZATION_FINISHED:
 			InputStream serviceAccount = null;
-			serviceAccount = ctx.getResourceAsStream("/WEB-INF/currencyserver240395-bd7933f24eae.json");
+			serviceAccount = ctx.getResourceAsStream("/WEB-INF/test-4a025-firebase-adminsdk-cyauk-6714680bd0.json");
 			FirebaseOptions options = null;
 			try {
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://currencyserver240395.firebaseio.com/").build();
+						.setDatabaseUrl("https://test-4a025.firebaseio.com/").build();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -61,7 +61,7 @@ public class MainApplicationListener implements ApplicationEventListener {
 					while (true) {
 						for (int i = 0; i < CURRENCIES_ID.length; i++) {
 							try {
-								parseData(CURRENCIES_ID[i]);
+								parseData(CURRENCIES_ID[i], i+1);
 							} catch (MalformedURLException e) {
 								e.printStackTrace();
 							}
@@ -96,15 +96,16 @@ public class MainApplicationListener implements ApplicationEventListener {
 				.setValueAsync(feed);
 	}
 
-	public void parseData(String idCurrency) throws MalformedURLException {
+	public void parseData(String idCurrency, int position) throws MalformedURLException {
 		String urlHost = "https://" + idCurrency + URL_RATE;
 		RSSFeedParser parser = new RSSFeedParser(urlHost);
 		List<FeedWithPriority> listFeed = parser.readFeed();
-		for (FeedWithPriority feed : listFeed) {
-			if (feed.getPriority() == 0) {
-				syncData(new Feed(feed), idCurrency);
+		for(int i = position ; i < CURRENCIES_ID.length; i++) {
+		//for (FeedWithPriority feed : listFeed) {
+			if (listFeed.get(i).getPriority() == 0) {
+				syncData(new Feed(listFeed.get(i)), idCurrency);
 			} else {
-				syncData(feed, idCurrency);
+				syncData(listFeed.get(i), idCurrency);
 			}
 		}
 	}
