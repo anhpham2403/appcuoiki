@@ -24,32 +24,37 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainApplicationListener implements ApplicationEventListener {
 
 	public static final String URL_RATE = ".fxexchangerate.com/rss.xml";
-	public static final int TIME_RELOAD = 1200000;
+	public static final int TIME_RELOAD = 1800000;
 	@Context
 	private ServletContext ctx;
 	private static DatabaseReference mDatabase;
-	private static final String[] CURRENCIES_ID = { "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG",
-			"AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BIF", "BND", "BOB", "BRL", "BSD", "BTN", "BWP", "BYN", "BYR",
-			"BZD", "CAD", "CDF", "CHF", "CLP", "CNY", "COP", "CRC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD",
-			"EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GHS", "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD",
-			"HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "IQD", "IRR", "ISK", "JMD", "JOD", "JPY", "KES", "KGS", "KHR",
-			"KMF", "KPW", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LVL", "LYD", "MAD", "MDL",
-			"MGA", "MKD", "MMK", "MNT", "MOP", "MRO", "MUR", "MVR", "MWK", "MXN", "MYR", "MZN", "NAD", "NGN", "NIO",
-			"NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB",
-			"RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SLL", "SOS", "SRD", "STD", "SYP", "SZL", "THB",
-			"TJS", "TMT", "TND", "TOP", "TRY", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VEF", "VND",
-			"VUV", "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW" };
+	private static final String[] CURRENCIES_ID = { 
+			"AUD", "ALL", "DZD", "ARS", "AWG", "GBP", "BSD", "BHD", "BDT","BBD",
+			"BYR", "BZD", "BMD", "BTN", "BOB", "BWP", "BRL", "BND", "BGN", "BIF",
+			"CAD", "CNY", "KHR", "CVE", "KYD", "XOF", "XAF", "CLP", "COP", "KMF", 
+			"CRC", "HRK", "CUP", "CZK", "EUR", "DKK", "DJF", "DOP", "XCD", "EGP", 
+			"SVC", "EEK", "ETB", "FKP", "FJD", "HKD", "IDR", "INR", "GMD", "GTQ",
+			"GNF", "GYD", "HTG", "HNL", "HUF", "ISK", "IRR", "IQD", "ILS", "JPY", 
+			"JMD", "JOD", "KZT", "KES", "KRW", "KWD", "LAK", "LVL", "LBP", "LSL",
+			"LRD", "LYD", "LTL", "MOP", "MKD", "MWK", "MYR", "MVR", "MRO", "MUR",
+			"MXN", "MDL", "MNT", "MAD", "MMK", "NAD", "NPR", "ANG", "NZD", "NIO", 
+			"NGN", "KPW", "NOK", "OMR", "XPF", "PKR", "PAB", "PGK", "PYG", "PEN",
+			"PHP", "PLN", "QAR", "RON", "RUB", "RWF", "CHF", "WST", "STD", "SAR",
+			"SCR", "SLL", "SGD", "SKK", "SBD", "SOS", "ZAR", "LKR", "SHP", "SDG", 
+			"SZL", "SEK", "SYP", "USD", "THB", "TRY", "TWD", "TZS", "TOP", "TTD",
+			"TND", "AED", "UGX", "UAH", "UYU", "VUV", "VND", "YER", "ZMK", "ZWD",
+			"VEF", "UZS", "KGS", "GHS"};
 
 	@Override
 	public void onEvent(ApplicationEvent event) {
 		switch (event.getType()) {
 		case INITIALIZATION_FINISHED:
 			InputStream serviceAccount = null;
-			serviceAccount = ctx.getResourceAsStream("/WEB-INF/currencyserver240395-bd7933f24eae.json");
+			serviceAccount = ctx.getResourceAsStream("/WEB-INF/test-4a025-firebase-adminsdk-cyauk-6714680bd0.json");
 			FirebaseOptions options = null;
 			try {
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://currencyserver240395.firebaseio.com/").build();
+						.setDatabaseUrl("https://test-4a025.firebaseio.com/").build();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -61,7 +66,7 @@ public class MainApplicationListener implements ApplicationEventListener {
 					while (true) {
 						for (int i = 0; i < CURRENCIES_ID.length; i++) {
 							try {
-								parseData(CURRENCIES_ID[i]);
+								parseData(CURRENCIES_ID[i], i+1);
 							} catch (MalformedURLException e) {
 								e.printStackTrace();
 							}
@@ -96,15 +101,16 @@ public class MainApplicationListener implements ApplicationEventListener {
 				.setValueAsync(feed);
 	}
 
-	public void parseData(String idCurrency) throws MalformedURLException {
+	public void parseData(String idCurrency, int position) throws MalformedURLException {
 		String urlHost = "https://" + idCurrency + URL_RATE;
 		RSSFeedParser parser = new RSSFeedParser(urlHost);
 		List<FeedWithPriority> listFeed = parser.readFeed();
-		for (FeedWithPriority feed : listFeed) {
-			if (feed.getPriority() == 0) {
-				syncData(new Feed(feed), idCurrency);
+		for(int i = position ; i < CURRENCIES_ID.length; i++) {
+		//for (FeedWithPriority feed : listFeed) {
+			if (listFeed.get(i).getPriority() == 0) {
+				syncData(new Feed(listFeed.get(i)), idCurrency);
 			} else {
-				syncData(feed, idCurrency);
+				syncData(listFeed.get(i), idCurrency);
 			}
 		}
 	}
