@@ -14,6 +14,7 @@ import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
 
 import com.anh.currency.model.Feed;
+import com.anh.currency.model.FeedWithPriority;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -23,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainApplicationListener implements ApplicationEventListener {
 
 	public static final String URL_RATE = ".fxexchangerate.com/rss.xml";
-	public static final int TIME_RELOAD = 1200000;
+	public static final int TIME_RELOAD = 1800000;
 	@Context
 	private ServletContext ctx;
 	private static DatabaseReference mDatabase;
@@ -44,11 +45,11 @@ public class MainApplicationListener implements ApplicationEventListener {
 		switch (event.getType()) {
 		case INITIALIZATION_FINISHED:
 			InputStream serviceAccount = null;
-			serviceAccount = ctx.getResourceAsStream("/WEB-INF/currencyserver240395-bd7933f24eae.json");
+			serviceAccount = ctx.getResourceAsStream("/WEB-INF/test-4a025-firebase-adminsdk-cyauk-6714680bd0.json");
 			FirebaseOptions options = null;
 			try {
 				options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-						.setDatabaseUrl("https://currencyserver240395.firebaseio.com/").build();
+						.setDatabaseUrl("https://test-4a025.firebaseio.com/").build();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -60,7 +61,7 @@ public class MainApplicationListener implements ApplicationEventListener {
 					while (true) {
 						for (int i = 0; i < CURRENCIES_ID.length; i++) {
 							try {
-								parseData(CURRENCIES_ID[i]);
+								parseData(CURRENCIES_ID[i], i+1);
 							} catch (MalformedURLException e) {
 								e.printStackTrace();
 							}
@@ -85,15 +86,27 @@ public class MainApplicationListener implements ApplicationEventListener {
 
 	public void syncData(Feed feed, String idCurrency) {
 		mDatabase = FirebaseDatabase.getInstance().getReference("currency");
-		mDatabase.child(idCurrency.toLowerCase()).child(feed.getTitle().toLowerCase()).child(mDatabase.push().getKey()).setValueAsync(feed);
+		mDatabase.child(idCurrency.toLowerCase()).child(feed.getTitle().toLowerCase()).child(mDatabase.push().getKey())
+				.setValueAsync(feed);
 	}
 
-	public void parseData(String idCurrency) throws MalformedURLException {
+	public void syncData(FeedWithPriority feed, String idCurrency) {
+		mDatabase = FirebaseDatabase.getInstance().getReference("currency");
+		mDatabase.child(idCurrency.toLowerCase()).child(feed.getTitle().toLowerCase()).child(mDatabase.push().getKey())
+				.setValueAsync(feed);
+	}
+
+	public void parseData(String idCurrency, int position) throws MalformedURLException {
 		String urlHost = "https://" + idCurrency + URL_RATE;
 		RSSFeedParser parser = new RSSFeedParser(urlHost);
-		List<Feed> listFeed = parser.readFeed();
-		for (Feed feed : listFeed) {
-			syncData(feed, idCurrency);
+		List<FeedWithPriority> listFeed = parser.readFeed();
+		for(int i = position ; i < CURRENCIES_ID.length; i++) {
+		//for (FeedWithPriority feed : listFeed) {
+			if (listFeed.get(i).getPriority() == 0) {
+				syncData(new Feed(listFeed.get(i)), idCurrency);
+			} else {
+				syncData(listFeed.get(i), idCurrency);
+			}
 		}
 	}
 }

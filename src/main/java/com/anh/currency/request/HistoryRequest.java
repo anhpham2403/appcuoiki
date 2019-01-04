@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import com.anh.currency.model.Feed;
+import com.anh.currency.model.FeedWithPriority;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,13 +48,21 @@ public class HistoryRequest {
 	// 3: thang
 	// 4: nam
 	public Response getUser(@PathParam("id_base") String idBase, @QueryParam("id") String idCurrency,
-			@QueryParam("to") long dateTo, @QueryParam("from") long dateFrom, @QueryParam("priority") String priority) {
+			@QueryParam("to") long dateTo, @QueryParam("from") long dateFrom, @QueryParam("priority") int priority) {
 		mDatabase = FirebaseDatabase.getInstance().getReference("currency");
 		List<Feed> feeds = new ArrayList<>();
 		CountDownLatch latch = new CountDownLatch(1);
 		Query query = mDatabase.child(idBase).child(idCurrency);
-		if (!priority.isEmpty()) {
-			query = query.orderByChild("priorities").equalTo(priority);
+		if (priority != 0) {
+			if (priority == 2) {
+				query = query.orderByChild("priority").startAt(1).endAt(4);
+			} else if (priority == 1) {
+				query = query.orderByChild("priority").startAt(1).endAt(6);
+			} else if (priority == 3) {
+				query = query.orderByChild("priority").startAt(4).endAt(5);
+			} else if (priority == 4) {
+				query = query.orderByChild("priority").startAt(2).endAt(3);
+			}
 		}
 		query.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -61,15 +70,21 @@ public class HistoryRequest {
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				SimpleDateFormat dt = new SimpleDateFormat("EEE MMM dd yyyyy hh:mm:ss z");
 				for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-					Feed feed = snapshot.getValue(Feed.class);
-					Calendar time = Calendar.getInstance();
-					try {
-						time.setTime(dt.parse(feed.getPubDate()));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-					if (time.getTimeInMillis() >= dateFrom && time.getTimeInMillis() <= dateTo) {
-						feeds.add(feed);
+					if (priority == 2) {
+						FeedWithPriority feed = snapshot.getValue(FeedWithPriority.class);
+						if (feed.getPriority() != 3) {
+							Calendar time = Calendar.getInstance();
+							if (feed.getPubDate() >= dateFrom && time.getTimeInMillis() <= dateTo) {
+								feeds.add(feed);
+							}
+						}
+
+					} else {
+						Feed feed = snapshot.getValue(Feed.class);
+						Calendar time = Calendar.getInstance();
+						if (feed.getPubDate() >= dateFrom && time.getTimeInMillis() <= dateTo) {
+							feeds.add(feed);
+						}
 					}
 				}
 				JsonArray array = new JsonArray();
@@ -89,15 +104,9 @@ public class HistoryRequest {
 					currency = new JsonObject();
 					currency.addProperty("id", feed.getTitle().toUpperCase());
 					jsonObject.add("currency2", currency);
-					jsonObject.addProperty("rate2", twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
-					Calendar time = Calendar.getInstance();
-					try {
-						time.setTime(dt.parse(feed.getPubDate()));
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					jsonObject.addProperty("time",time.getTimeInMillis());
+					jsonObject.addProperty("rate2",
+							twoDecimals.format(double1 != 0.00000 ? (double) 1 / double1 : double1));
+					jsonObject.addProperty("time", feed.getPubDate());
 					array.add(jsonObject);
 				}
 				String json = gson.toJson(feeds);

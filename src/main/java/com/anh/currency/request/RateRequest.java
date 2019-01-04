@@ -64,6 +64,6 @@ public class RateRequest {
 	public List<Feed> parseData(String idCurrency) throws MalformedURLException {
 		String urlHost = "https://" + idCurrency + URL_RATE;
 		RSSFeedParser parser = new RSSFeedParser(urlHost);
-		return parser.readFeed();
+		return parser.readFeed1();
 	}
 }
